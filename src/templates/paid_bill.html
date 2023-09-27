@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculadora de Pago</title>
+</head>
+<body>
+    <h2>Calculadora de Pago</h2>
+    <form id="paymentForm">
+        <label for="carName">Nombre del Auto:</label>
+        <input type="text" id="carName" required><br>
+
+        <label for="parkingName">Nombre del Estacionamiento:</label>
+        <input type="text" id="parkingName" required><br>
+
+        <label for="parkingTime">Tiempo Estacionado:</label>
+        <select id="parkingTime" required>
+            <option value="" disabled selected>Seleccione</option>
+            <option value="5">5 minutos</option>
+            <option value="10">10 minutos</option>
+            <option value="15">15 minutos</option>
+            <option value="20">20 minutos</option>
+            <option value="25">25 minutos</option>
+            <option value="30">30 minutos</option>
+            <option value="35">35 minutos</option>
+            <option value="40">40 minutos</option>
+            <option value="45">45 minutos</option>
+            <option value="50">50 minutos</option>
+            <option value="55">55 minutos</option>
+            <option value="60">1 hora</option>
+            <option value="120">2 horas</option>
+            <option value="180">3 horas</option>
+            <option value="240">4 horas</option>
+            <option value="300">5 horas</option>
+            <option value="360">6 horas</option>
+            <option value="420">7 horas</option>
+            <option value="480">8 horas</option>
+            <option value="540">9 horas</option>
+            <option value="600">10 horas</option>
+            <option value="660">11 horas</option>
+            <option value="720">12 horas</option>
+            <option value="780">13 horas</option>
+            <option value="840">14 horas</option>
+            <option value="900">15 horas</option>
+            <option value="960">16 horas</option>
+            <option value="1020">17 horas</option>
+            <option value="1080">18 horas</option>
+            <option value="1140">19 horas</option>
+            <option value="1200">20 horas</option>
+            <option value="1260">21 horas</option>
+            <option value="1320">22 horas</option>
+            <option value="1380">23 horas</option>
+            <option value="1440">24 horas</option>
+            <!-- Agregar más opciones en minutos -->
+        </select><br>
+
+        <button type="button" onclick="calculatePayment()">Calcular y Registrar Pago</button>
+        <button type="button" onclick="redirectToRegister()">Ver Registros</button>
+        <button type="button" onclick="redirectToPaids()">Ver Precios</button>
+    </form>
+        
+    <p id="paymentResult"></p>
+
+    <script>
+
+        function redirectToRegister() {
+            window.location.href = 'ver_pagos.html';
+        }
+
+        function redirectToPaids(){
+            window.location.href = 'get_prices.html'
+        }
+
+        function calculatePayment() {
+            const carName = document.getElementById('carName').value;
+            const parkingName = document.getElementById('parkingName').value;
+            const parkingTime = parseFloat(document.getElementById('parkingTime').value);
+
+            const cachedData = JSON.parse(localStorage.getItem('prices')) || [];
+            const selectedParking = cachedData.find(price => price.parkingName === parkingName);
+
+            if (!selectedParking) {
+                alert('Estacionamiento no encontrado');
+                return;
+            }
+
+            const hourlyPrice = parseFloat(selectedParking.hourlyPrice);
+            const toleranceTime = parseFloat(selectedParking.toleranceTime);
+
+            const totalPayment = parkingTime <= toleranceTime ? 0 : parkingTime * hourlyPrice;
+
+            const paymentRecord = {
+                carName: carName,
+                parkingName: parkingName,
+                totalPayment: totalPayment.toFixed(2)
+            };
+
+            const cachedPayments = JSON.parse(localStorage.getItem('payments')) || [];
+            cachedPayments.push(paymentRecord);
+            localStorage.setItem('payments', JSON.stringify(cachedPayments));
+
+            const paymentResult = `Total a pagar por ${carName} en el estacionamiento ${parkingName}: $${totalPayment.toFixed(2)}`;
+            document.getElementById('paymentResult').textContent = paymentResult;
+
+            alert('Pago registrado exitosamente');
+        }
+    </script>
+</body>
+</html>

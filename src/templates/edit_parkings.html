@@ -16,31 +16,31 @@
     {% endif %}
     {% endwith %}
    
-    <form action="/lista_users/update/{{ user.0 }}" method="POST">
+    <form action="/lista_parkings/update/{{ parkings.0 }}" method="POST">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
         <div class="form-group my-4"> 
-          <label for="fullname">Nombre:</label>
-          <input type="text" name="fullname" placeholder="Nombre Completo" value="{{ user.1 }}" class="form-control" required>
+          <label for="parking_name">Estacionamiento:</label>
+          <input type="text" name="parking_name" placeholder="Estacionamiento" value="{{ parkings.1 }}" class="form-control" required>
         </div>
 
         <div class="form-group my-4">
-          <label for="email">Correo:</label>
-          <input type="text" name="email" placeholder="Correo" value="{{ user.2 }}" class="form-control" required>
+          <label for="location">Ubicación:</label>
+          <input type="text" name="location" placeholder="Ubicación" value="{{ parkings.2 }}" class="form-control" required>
         </div>
 
         <div class="form-group my-4">
-          <label for="username">Usuario:</label>
-          <input type="text" name="username" placeholder="Usuario" value="{{ user.3 }}" class="form-control" required>
+          <label for="phone_number">Telefono:</label>
+          <input type="text" name="phone_number" placeholder="Telefono" value="{{ parkings.3 }}" class="form-control" required>
         </div>
 
         <div class="form-group my-4">
-          <label for="password">Contraseña:</label>
-          <input type="text" name="password" placeholder="Contraseña" value="{{ user.4 }}" class="form-control" required>
+          <label for="space">Espacios:</label>
+          <input type="text" name="space" placeholder="Espacios" value="{{ parkings.4 }}" class="form-control" required>
         </div>
 
         <button type="submit" class="w-100 btn btn-success btn-block my-2">Save</button>
-        <button type="button" class="w-100 btn btn-md btn-info my-2" onclick="location.href='/get_list_full'">Regresar</button>
+        <button type="button" class="w-100 btn btn-md btn-info my-2" onclick="location.href='/get_full_parkings'">Regresar</button>
     </form>
  </div>
 

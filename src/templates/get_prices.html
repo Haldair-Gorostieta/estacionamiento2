@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registros de Precios</title>
+</head>
+<body>
+    <h2>Registros de Precios</h2>
+    <table border="1" id="priceTable">
+        <tr>
+            <th>Tiempo Mínimo</th>
+            <th>Tiempo Máximo</th>
+            <th>Tiempo de Tolerancia</th>
+            <th>Precio por Hora</th>
+            <th>Nombre Estacionamiento</th>
+            <th>Acciones</th>
+        </tr>
+    </table>
+    <button onclick="redirectToIndex()">Volver a Registro</button>
+    <button onclick="redirectToPaid()">Pagos</button>
+    <script>
+        function redirectToIndex() {
+            window.location.href = 'add_prices2.html';
+        }
+
+         function redirectToPaid() {
+            window.location.href = 'paid_bill.html';
+        }
+
+        function loadCachedData() {
+            const cachedData = JSON.parse(localStorage.getItem('prices')) || [];
+            const priceTable = document.getElementById('priceTable');
+
+            cachedData.forEach(price => {
+                const row = priceTable.insertRow();
+                row.insertCell().textContent = price.minTime;
+                row.insertCell().textContent = price.maxTime;
+                row.insertCell().textContent = price.toleranceTime;
+                row.insertCell().textContent = price.hourlyPrice;
+                row.insertCell().textContent = price.parkingName;
+
+                const actionsCell = row.insertCell();
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Editar';
+                editButton.onclick = function() {
+                    editPrice(cachedData.indexOf(price));
+                };
+                actionsCell.appendChild(editButton);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Eliminar';
+                deleteButton.onclick = function() {
+                    deletePrice(cachedData.indexOf(price));
+                };
+                actionsCell.appendChild(deleteButton);
+            });
+        }
+
+        function editPrice(index) {
+            const cachedData = JSON.parse(localStorage.getItem('prices')) || [];
+            const priceToEdit = cachedData[index];
+
+            const newMinTime = prompt('Nuevo Tiempo Mínimo:', priceToEdit.minTime);
+            const newMaxTime = prompt('Nuevo Tiempo Máximo:', priceToEdit.maxTime);
+            const newToleranceTime = prompt('Nuevo Tiempo de Tolerancia:', priceToEdit.toleranceTime);
+            const newHourlyPrice = prompt('Nuevo Precio por Hora:', priceToEdit.hourlyPrice);
+            const newParkingName = prompt('Nuevo Nombre de Estacionamiento:', priceToEdit.parkingName);
+
+            priceToEdit.minTime = newMinTime;
+            priceToEdit.maxTime = newMaxTime;
+            priceToEdit.toleranceTime = newToleranceTime;
+            priceToEdit.hourlyPrice = newHourlyPrice;
+            priceToEdit.parkingName = newParkingName;
+
+            cachedData[index] = priceToEdit;
+            localStorage.setItem('prices', JSON.stringify(cachedData));
+
+            alert('Registro editado exitosamente');
+            location.reload(); // Recargar la página para reflejar los cambios en la tabla
+            }
+
+
+        function deletePrice(index) {
+            const cachedData = JSON.parse(localStorage.getItem('prices')) || [];
+
+            const confirmDelete = confirm('¿Estás seguro de que deseas eliminar este registro?');
+
+            if (confirmDelete) {
+                cachedData.splice(index, 1);
+                localStorage.setItem('prices', JSON.stringify(cachedData));
+
+                alert('Registro eliminado exitosamente');
+                location.reload(); // Recargar la página para reflejar los cambios en la tabla
+            }
+        }
+
+
+        // Cargar datos al cargar la página
+        window.addEventListener('load', function() {
+            loadCachedData();
+        });
+    </script>
+</body>
+</html>

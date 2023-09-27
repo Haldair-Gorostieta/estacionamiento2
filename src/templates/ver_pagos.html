@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ver Pagos Registrados</title>
+</head>
+<body>
+    <h2>Pagos Registrados</h2>
+    <table border="1" id="paymentTable">
+        <tr>
+            <th>Nombre del Auto</th>
+            <th>Nombre del Estacionamiento</th>
+            <th>Total a Pagar</th>
+        </tr>
+    </table>
+    <button type="button" onclick="redirectToPrice()">Nuevo Registro</button>
+    <button type="button" onclick="redirectToPaid()">Nuevo Pago</button>
+    <script>
+        function redirectToPrice(){
+            window.location.href = 'add_prices2.html'
+        } 
+
+        function redirectToPaid(){
+            window.location.href = 'paid_bill.html'
+        }
+
+        function loadPayments() {
+            const cachedPayments = JSON.parse(localStorage.getItem('payments')) || [];
+            const paymentTable = document.getElementById('paymentTable');
+
+            cachedPayments.forEach(payment => {
+                const row = paymentTable.insertRow();
+                row.insertCell().textContent = payment.carName;
+                row.insertCell().textContent = payment.parkingName;
+                row.insertCell().textContent = `$${payment.totalPayment}`;
+            });
+        }
+
+        // Cargar datos al cargar la página
+        window.addEventListener('load', function() {
+            loadPayments();
+        });
+    </script>
+</body>
+</html>
